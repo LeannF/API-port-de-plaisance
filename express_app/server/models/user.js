@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const bcrypt= require('bcrypt');
 
-const User = new Schema({
-    username: {
+const User = new Schema(    {
+    userName: {
         type: String,
         trim: true,
         unique: true,
@@ -33,7 +33,7 @@ const User = new Schema({
     }
 })
 
-//has le mdp
+//hash le mdp
 User.pre('save', function(next) {
     if (!this.isModified('password')) {
         return next();

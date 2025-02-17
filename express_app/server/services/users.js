@@ -16,7 +16,7 @@ exports.getById = async(req, res, next) => {
 
 exports.add = async(req, res, next) => {
     const temp = ({
-        username    : req.body.username, 
+        userName    : req.body.userName, 
         email       : req.body.email,
         password    : req.body.password,  
     });
@@ -34,7 +34,7 @@ exports.update = async(req, res, next) => {
     const id = req.params.id
     
     const temp = ({
-        username    : req.body.username, 
+        userName    : req.body.userName, 
         email       : req.body.email,
         password    : req.body.password,  
     });
@@ -48,7 +48,7 @@ exports.update = async(req, res, next) => {
                     user[key] = temp[key];
                 }
             });
-            await user.save();
+            await User.save();
             return res.status(201).json(user);
         }
 

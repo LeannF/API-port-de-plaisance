@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const userRoute = require('./users');
+const reservationsRouter = require('./reservations');
+const catwaysRouter = require('./catways');
 const { version } = require('mongoose');
 
 /* GET home page. */
@@ -15,5 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 router.use('/users', userRoute);
+router.use('/reservations', reservationsRouter);
+router.use('/catways', catwaysRouter);
 
 module.exports = router;
