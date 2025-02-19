@@ -1,31 +1,30 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Reservation = new Schema( {
+const ReservationSchema = new Schema({
     catwayNumber: {
         type: Number,
         trim: true,
-        unique: true,
-        required: [true, 'Veuillez entrer le numéro de la reservation']
+        required: [true, 'Veuillez entrer le numéro du catway'],
     },
     clientName: {
         type: String,
-        trim: true
+        trim: true,
+        required: [true, 'Veuillez entrer le nom du client']
     },
     boatName: {
         type: String,
-        trim: true
+        trim: true,
+        required: [true, 'Veuillez entrer le nom du bateau']
     },
     startDate: {
         type: String,
-        trim: true,
-        match: (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
+        required: [true, 'Veuillez entrer la date de début']
     },
     endDate: {
         type: String,
-        trim: true,
-        match: (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
+        required: [true, 'Veuillez entrer la date de fin']
     }
 })
 
-module.exports = mongoose.model('Reservation', Reservation);
+module.exports = mongoose.model('Reservation', ReservationSchema);

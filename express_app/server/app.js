@@ -34,12 +34,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/reservations', reservationsRouter);
+app.use('/', reservationsRouter);
 app.use('/catways', catwaysRouter);
 
 
 app.use(function(req, res, next) {
-  res.status(404).json({ name: 'API', version: '1.0', status: 404, message: 'not_found' });
+  res.status(404).json({ name: 'PDP', version: '1.0', status: 404, message: 'not_found' });
 });
 
 module.exports = app;

@@ -1,7 +1,7 @@
 const mongoose= require('mongoose');
 
 const clientOptions = {
-    dbName          : 'apinode'
+    dbName          : 'pdp'
 };
 
 exports.initClientDbConnection = async () => {

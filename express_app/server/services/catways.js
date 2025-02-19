@@ -1,10 +1,8 @@
 const Catway = require('../models/catway');
 
 exports.getById = async(req, res, next) => {
-    const id = req.params.id
-
     try{
-        let catway = await Catway.findById(id);
+        let catway = await Catway.findOne({ catwayNumber: req.params.id });
         if (catway) {
             return res.status(200).json(catway);
         }
@@ -40,15 +38,15 @@ exports.add = async(req, res, next) => {
     }
 }
 
-exports.update = async(req, res, next) => {
-    const id = req.params.id
-    
+exports.update = async(req, res, next) => {    
     const temp = ({
+        catwayNumber    : req.params.id,
         catwayState     : req.body.catwayState,  
+        catwayType      : req.params.catwayType
     });
 
     try{
-        let catway = await Catway.findOne({_id : id});
+        let catway = await Catway.findOne({ catwayNumber: req.params.id });
 
         if (catway) {
             Object.keys(temp).forEach((key) =>{
@@ -67,10 +65,9 @@ exports.update = async(req, res, next) => {
 }
 
 exports.delete = async(req, res, next) => {
-    const id = req.params.id
 
     try{
-        await catway.deleteOne({_id : id});
+        await Catway.deleteOne({ catwayNumber: req.params.id });
 
         return res.status(204).json('delete_ok');
     } catch(error){

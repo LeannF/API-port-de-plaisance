@@ -5,14 +5,19 @@ const Catway = new Schema( {
     catwayNumber: {
         type: Number,
         trim: true,
+        require: [true, "Veuillez mettre le numéro du catway"],
+        unique: true
     },
     catwayType: {
         type: String,
-        trim: true
+        enum: ['long', 'short', "Long", "Short"],
+        trim: true,
+        require: true
     },
     catwayState: {
         type: String,
-        trim: true
+        trim: true,
+        require: true
     }
 })
 

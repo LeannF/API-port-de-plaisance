@@ -1,10 +1,10 @@
 const User = require('../models/user');
 
-exports.getById = async(req, res, next) => {
-    const id = req.params.id
+exports.getByEmail = async(req, res, next) => {
+    const email = req.params.email
 
     try{
-        let user = await User.findById(id);
+        let user = await User.findByEmail(email);
         if (user) {
             return res.status(200).json(user);
         }
@@ -13,6 +13,16 @@ exports.getById = async(req, res, next) => {
         return res.status(501).json("Invalid user ID format");
     }
 }
+exports.getAllUsers = (req, res, next) => {
+    User.find()  
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(error => {
+        res.status(400).json({ error });
+    });
+}
+
 
 exports.add = async(req, res, next) => {
     const temp = ({
@@ -31,7 +41,7 @@ exports.add = async(req, res, next) => {
 }
 
 exports.update = async(req, res, next) => {
-    const id = req.params.id
+    const email = req.params.email
     
     const temp = ({
         userName    : req.body.userName, 
@@ -40,7 +50,7 @@ exports.update = async(req, res, next) => {
     });
 
     try{
-        let user = await User.findOne({_id : id});
+        let user = await User.findOne({_email : email});
 
         if (user) {
             Object.keys(temp).forEach((key) =>{
@@ -59,10 +69,10 @@ exports.update = async(req, res, next) => {
 }
 
 exports.delete = async(req, res, next) => {
-    const id = req.params.id
+    const email = req.params.email
 
     try{
-        await User.deleteOne({_id : id});
+        await User.deleteOne({_email : email});
 
         return res.status(204).json('delete_ok');
     } catch(error){
