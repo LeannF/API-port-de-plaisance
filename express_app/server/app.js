@@ -9,6 +9,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const reservationsRouter = require('./routes/reservations');
 const catwaysRouter = require('./routes/catways');
+const authRouter = require('./routes/auth');
 
 const mongodb = require('./db/mongo');
 
@@ -36,6 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', reservationsRouter);
 app.use('/catways', catwaysRouter);
+app.use('/', authRouter);
 
 
 app.use(function(req, res, next) {
