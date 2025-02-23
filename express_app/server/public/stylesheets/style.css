@@ -1,8 +1,18 @@
 body {
-  padding: 50px;
+  padding: 1em;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
 }
 
+nav{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+
+
 a {
-  color: #00B7FF;
+  text-decoration: none;
+  list-style: none;
 }

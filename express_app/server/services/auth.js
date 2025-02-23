@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 exports.login = async(req, res) => {
     try {
-
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({ message: "Email et mot de passe requis" });
@@ -18,6 +17,7 @@ exports.login = async(req, res) => {
         let isMatch;
         try {
             isMatch = await bcrypt.compare(password, user.password);
+            console.log(password, user.password)
         } catch (bcryptError) {
             return res.status(500).json({ message: "Erreur lors de la vérification du mot de passe", error: bcryptError });
         }
