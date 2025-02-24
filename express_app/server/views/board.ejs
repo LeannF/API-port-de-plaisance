@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../public/stylesheets/style.css">
+        <link rel="stylesheet" href="/stylesheets/style.css">
         <title>Document</title>
     </head>
     <body>
@@ -11,19 +11,19 @@
             <nav>
                 <ul>
                     <a href="./accueil.ejs"><li>Accueil</li></a>
-                    <a href=""><li>Tableau de bord</li></a>
-                    <a href=""><li>Catways</li></a>
-                    <a href=""><li>Utilisateurs</li></a>
-                    <a href=""><li>Réservations</li></a>
-                    <a href=""><li>Documentation API</li></a>
-                    <a href=""><li>Déconnexion</li></a>
+                    <a href="./board.ejs"><li>Tableau de bord</li></a>
+                    <a href="./catways.ejs"><li>Catways</li></a>
+                    <a href="./users.ejs"><li>Utilisateurs</li></a>
+                    <a href="./reservations.ejs"><li>Réservations</li></a>
+                    <a href="./doc.ejs"><li>Documentation API</li></a>
+                    <a href="/logout"><li>Déconnexion</li></a>
                 </ul>
             </nav>
         </header>
         <main>
             <h1>Tableau de bord</h1>
             <section>
-                <h2>nom et adresse de messagerie utilisateur connecté</h2>
+                <h2><%= user.email %> - <%= user.name %> et adresse de messagerie utilisateur connecté</h2>
                 <p>Date du jour</p>
                 <table>
                     <thead>

@@ -1,9 +1,10 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser'); 
+const cookieSession = require('express-session');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -17,10 +18,22 @@ mongodb.initClientDbConnection();
 
 const app = express();
 
+
+app.use(cookieSession({
+  secret: 'monSuperSecret', // Clé secrète pour signer les sessions
+  resave: false, // Ne pas sauvegarder si aucune modification
+  saveUninitialized: true, // Sauvegarde une session même vide
+  cookie: { secure: false } // 1h d'expiration
+}));
+
 app.use(cors({
   exposedHeaders: ['Authorization'],
   origin: ''
 }));
+
+
+// Utiliser body-parser pour parser les données du formulaire
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +51,7 @@ app.use('/', reservationsRouter);
 app.use('/catways', catwaysRouter);
 app.use('/', authRouter);
 
+app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 

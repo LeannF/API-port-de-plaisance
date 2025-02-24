@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+const private = require('../middlewares/private')
 const userRoute = require('./users');
 
 /* GET home page. */
@@ -10,8 +11,10 @@ router.get('/', async (req, res) => {
   })
 });
 
-router.get('/board', async (req, res) => {
-  res.render('board', {
+router.get('/board', private.isAuthenticated,  async (req, res) => {
+  console.log("📌 Session actuelle:", req.session);
+  res.render('board',  {
+    user: req.session.user,
     title: 'Tableau de bord'
   })
 });
@@ -31,6 +34,12 @@ router.get('/catways', async (req, res) => {
 router.get('/reservations', async (req, res) => {
   res.render('reservations', {
     title: 'Page des réservations'
+  })
+});
+
+router.get('/doc', async (req, res) => {
+  res.render('doc', {
+    title: 'Documentation API'
   })
 });
 
