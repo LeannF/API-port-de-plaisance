@@ -19,7 +19,7 @@ exports.checkJWT = async (req, res, next) => {
 
 exports.isAuthenticated = (req, res, next) => {
     if (!req.session.user) {
-        return res.redirect('/accueil');  // Redirige vers la connexion si pas de session
+        return res.redirect('/');  // Redirige vers la connexion si pas de session
     }
     next();
 };

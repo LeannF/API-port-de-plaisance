@@ -15,28 +15,30 @@ exports.getByEmail = async(req, res, next) => {
         return res.status(501).json("Invalid user ID format");
     }
 }
-exports.getAllUsers = (req, res, next) => {
-    User.find()  
-    .then(user => {
-        res.status(200).json(user);
-    })
-    .catch(error => {
-        res.status(400).json({ error });
-    });
+exports.getAllUsers = async(req, res, next) => {
+    try {
+        return await User.find().lean();  // Retourne directement les catways
+    } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
+        return []; // Retourne un tableau vide en cas d'erreur
+    }
 }
 
 
 exports.add = async(req, res, next) => {
-    const temp = ({
-        userName    : req.body.userName, 
-        email       : req.body.email,
-        password    : req.body.password,  
-    });
-
     try{
-        let user = await User.create(temp);
+        const { userName, email, password } = req.body;
 
-        return res.status(201).json(user);
+        const newUser = ({
+            userName    : req.body.userName, 
+            email       : req.body.email,
+            password    : req.body.password,  
+        });
+
+
+        let user = await User.create(newUser);
+
+        //return res.status(201).json(user);
     } catch(error){
         return res.status(501).json(error);
     }
@@ -71,10 +73,8 @@ exports.update = async (req, res, next) => {
 }
 
 exports.delete = async(req, res, next) => {
-    const email = req.params.email
-
     try{
-        await User.deleteOne({email});
+        await User.deleteOne({email: req.params.email});
 
         return res.status(204).json('delete_ok');
     } catch(error){

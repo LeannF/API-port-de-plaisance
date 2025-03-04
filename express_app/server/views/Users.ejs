@@ -3,40 +3,65 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../public/stylesheets/style.css">
-        <title>Document</title>
+        <link rel="stylesheet" href="/stylesheets/style.css">
+        <title>Utilisateurs</title>
     </head>
     <body>
         <main>
-            <h1>Tableau de bord</h1>
+            <h1>Uilisateurs</h1>
             <section>
-                <h2>nom et adresse de messagerie utilisateur connecté</h2>
-                <p>Date du jour</p>
+                <h2>Rechercher un utilisateur</h2>
+                <form data-entity="users" id="search-form" name="users" action="/users/<%= email %>" method="get">
+                    <label for="email">Email de l'utilisateur</label>
+                    <input name="email" id="email" type="text" required>
+                    
+                    <input id="searchBtn" type="submit" value="Rechercher"></input>
+                </form>
+                <div id="resultsContainer"></div>
+            </section>
+            <section>
+                <h2>Ajouter un utilisateur</h2>
+                <form action="/users" method="post" >
+                    <label for="userName">Nom d'utilisateur</label>
+                    <input name="userName" id="userName" type="text" required>
+
+                    <label for="email">Email de l'utilisateur</label>
+                    <input name="email" type="text" required>
+                    
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="password" id="password" required>
+                    
+                    <input type="submit"></input>
+                </form>
+            </section>      
+            <section>
+                <h2>Liste des utilisateurs</h2>
                 <table>
+                    <caption>Utilisateurs</caption>
                     <thead>
-                        <caption>Réservations en cours</caption>
                         <tr>
-                            <th>Company</th>
-                            <th>Contact</th>
-                            <th>Country</th>
-                            <th>Country</th>
-                            <th>Country</th>
+                            <th>Nom de l'utilisateur</th>
+                            <th>Email</th>
+                            <th>Mot de passe</th>
+                            <th>Modifications</th>
                         </tr>
                     </thead>
-
-                    <tr>
-                      <td>Alfreds Futterkiste</td>
-                      <td>Maria Anders</td>
-                      <td>Germany</td>
-                    </tr>
-                    <tr>
-                      <td>Centro comercial Moctezuma</td>
-                      <td>Francisco Chang</td>
-                      <td>Mexico</td>
-                    </tr>
-                  </table>
-            </section>
-
-        </main>
+                    <tbody data-entity="users">
+                        <% users.forEach(user => { %>
+                            <tr id="row-<%= user._id %>">
+                                <td><%= user.userName %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.password %></td>
+                                <td>
+                                    <button class="update-btn" data-id="<%= user._id %>">Modifier</button>
+                                    <button class="delete-btn" data-id="<%= user._id %>">Supprimer</button>
+                                </td>
+                            </tr>
+                        <% }) %>    
+                    </tbody> 
+                </table>
+            </section> 
+        </main>   
     </body>
+    <script src="/javascripts/script.js"></script>
 </html>

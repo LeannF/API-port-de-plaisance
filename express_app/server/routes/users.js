@@ -5,14 +5,14 @@ const service = require('../services/users');
 const private = require('../middlewares/private')
 
 
-router.get('/:email', private.checkJWT, service.getByEmail );
-router.get('/', private.checkJWT, service.getAllUsers);
+router.get('/:email', service.getByEmail );
+router.get('/', service.getAllUsers);
 
-router.post('/', private.checkJWT, service.add);
+router.post('/', service.add);
 
-router.patch('/:email', private.checkJWT, service.update);
+router.patch('/:email', service.update);
 
-router.delete('/:email', private.checkJWT, service.delete);
+router.delete('/:email', service.delete);
 
 //router.post('/authenticate', service.authenticate)
 

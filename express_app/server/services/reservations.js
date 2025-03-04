@@ -1,15 +1,16 @@
 const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 
-exports.getById = async(req, res, next) => {
+exports.getByCatwayNumber = async(req, res, next) => {
     try{
-        const reservation = await Reservation.findOne({
+        const reservation = await Reservation.findOne({ 
             _id: req.params.idReservation,
-            catwayNumber: req.params.id
+            catwayNumber: req.params.id 
         });
         if (!reservation) {
             return res.status(404).json({ message: "Réservation non trouvée" });
         }
+
 
         res.status(200).json(reservation);
     }catch (error){
@@ -39,8 +40,10 @@ exports.getAllReservationsBycatwayNumber = async(req, res, next) => {
 
 exports.add = async (req, res) => {
     try {
+        const { catwayNumber, clientName, boatName, startDate, endDate } = req.body;
+
         // Vérifier si le catway existe
-        const catwayExists = await Catway.findOne({ catwayNumber: req.params.id });
+        const catwayExists = await Catway.findOne({ catwayNumber });
 
         if (!catwayExists) {
             return res.status(404).json({ message: "Catway non trouvé" });
@@ -57,7 +60,7 @@ exports.add = async (req, res) => {
 
         const reservation = await Reservation.create(newReservation);
 
-        return res.status(201).json(reservation);
+        //return res.status(201).json(reservation);
     } catch (error) {
         return res.status(500).json({ message: "Erreur serveur", error: error.message });
     }

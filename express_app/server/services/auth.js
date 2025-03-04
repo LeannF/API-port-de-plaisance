@@ -6,7 +6,7 @@ exports.login = async (req, res) => {
     try {
         console.log("📩 Requête reçue:", req.body);
 
-        const { email, password } = req.body;
+        const { email, password, userName } = req.body;
         if (!email || !password) {
             console.log("⚠️ Email ou mot de passe manquant");
             return res.status(400).json({ message: "Email et mot de passe requis" });
@@ -25,7 +25,7 @@ exports.login = async (req, res) => {
         }
 
         // Stocker l'utilisateur dans la session
-        req.session.user = { id: user._id, email: user.email };
+        req.session.user = { id: user._id, email: user.email, name: user.userName };
         console.log("📌 Session après connexion:", req.session);
 
         console.log("✅ Connexion réussie, redirection vers /board");
@@ -48,5 +48,4 @@ exports.logout = async(req, res) => {
         }
         res.redirect('/');
     });
-    res.json({ message: "Déconnexion réussie" });
 }

@@ -12,27 +12,28 @@ exports.getById = async(req, res, next) => {
     }
 }
 
-exports.getAllCatways = (req, res, next) => {
-    Catway.find()  
-    .then(catway => {
-        res.status(200).json(catway);
-    })
-    .catch(error => {
-        res.status(400).json({ error });
-    });
+exports.getAllCatways = async(req, res, next) => {
+    try {
+        return await Catway.find().lean();  // Retourne directement les catways
+    } catch (error) {
+        console.error("Erreur lors de la récupération des catways :", error);
+        return []; // Retourne un tableau vide en cas d'erreur
+    }
 }
 
 exports.add = async(req, res, next) => {
-    const temp = ({
-        catwayNumber    : req.body.catwayNumber, 
-        catwayType      : req.body.catwayType,
-        catwayState     : req.body.catwayState,  
-    });
-
     try{
-        let catway = await Catway.create(temp);
+        const { catwayNumber, catwayType, catwayState } = req.body;
 
-        return res.status(201).json(catway);
+        const newCatway = ({
+            catwayNumber    : req.body.catwayNumber, 
+            catwayType      : req.body.catwayType,
+            catwayState     : req.body.catwayState,  
+        });
+
+        await Catway.create(newCatway);
+
+        //return res.status(201).json(catway);
     } catch(error){
         return res.status(501).json(error);
     }

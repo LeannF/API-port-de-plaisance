@@ -4,49 +4,49 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/stylesheets/style.css">
-        <title>Document</title>
+        <title><%= title %></title>
     </head>
     <body>
         <header>
             <nav>
                 <ul>
-                    <a href="./accueil.ejs"><li>Accueil</li></a>
-                    <a href="./board.ejs"><li>Tableau de bord</li></a>
-                    <a href="./catways.ejs"><li>Catways</li></a>
-                    <a href="./users.ejs"><li>Utilisateurs</li></a>
-                    <a href="./reservations.ejs"><li>Réservations</li></a>
-                    <a href="./doc.ejs"><li>Documentation API</li></a>
+                    <a href="/"><li>Accueil</li></a>
+                    <a href="./board"><li>Tableau de bord</li></a>
+                    <a href="./catways"><li>Catways</li></a>
+                    <a href="./users"><li>Utilisateurs</li></a>
+                    <a href="./reservations"><li>Réservations</li></a>
+                    <a href="./doc"><li>Documentation API</li></a>
                     <a href="/logout"><li>Déconnexion</li></a>
                 </ul>
             </nav>
         </header>
         <main>
-            <h1>Tableau de bord</h1>
+            <h1><%= title %></h1>
             <section>
-                <h2><%= user.email %> - <%= user.name %> et adresse de messagerie utilisateur connecté</h2>
-                <p>Date du jour</p>
+                <h2><%= user.name %> - <%= user.email %></h2>
+                <p><%= today %></p>
                 <table>
+                    <caption>Réservations en cours</caption>
                     <thead>
-                        <caption>Réservations en cours</caption>
                         <tr>
-                            <th>Company</th>
-                            <th>Contact</th>
-                            <th>Country</th>
-                            <th>Country</th>
-                            <th>Country</th>
+                            <th>Numéro du Catway</th>
+                            <th>Nom du client</th>
+                            <th>Nom du bateau</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
                         </tr>
                     </thead>
-
-                    <tr>
-                      <td>Alfreds Futterkiste</td>
-                      <td>Maria Anders</td>
-                      <td>Germany</td>
-                    </tr>
-                    <tr>
-                      <td>Centro comercial Moctezuma</td>
-                      <td>Francisco Chang</td>
-                      <td>Mexico</td>
-                    </tr>
+                    <tbody>
+                        <% reservations.forEach(reservation => { %>
+                            <tr>
+                                <td><%= reservation.catwayNumber %></td>
+                                <td><%= reservation.clientName %></td>
+                                <td><%= reservation.boatName %></td>
+                                <td><%= reservation.startDate %></td>
+                                <td><%= reservation.endDate %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
                   </table>
             </section>
 

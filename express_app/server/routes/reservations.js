@@ -3,7 +3,7 @@ const router = express.Router();
 
 const service = require('../services/reservations');
 
-router.get('/catways/:id/reservations/:idReservation', service.getById);
+router.get('/catways/:id/reservations/:idReservation', service.getByCatwayNumber);
 
 router.get('/catways/:id/reservations', service.getAllReservationsBycatwayNumber );
 
