@@ -2,18 +2,19 @@ document.getElementById("search-form").addEventListener("submit", async (event) 
     event.preventDefault(); // Empêche le rechargement de la page
 
     const entity = event.target.closest("[data-entity]").dataset.entity;
-    const email = document.getElementById("email").value;
+    const catwayId = document.getElementById("catwayNumber").value; // Id du catway
 
     let url = "";
 
     if (entity === "users") {
+        const email = document.getElementById("email").value;
         url = `/users/${email}`;
 
     } else if (entity === "catways") {
         url = `/catways/${catwayId}`;
 
     } else if (entity === "reservations") {
-        let reservationId = event.target.dataset.id;
+        const reservationId = document.getElementById("idReservation").value;
         url = `/catways/${catwayId}/reservations/${reservationId}`;
     }
 
@@ -32,9 +33,9 @@ document.getElementById("search-form").addEventListener("submit", async (event) 
                 if (entity === "users") {
                     itemElement.innerHTML = `<p><strong>Nom :</strong> ${data.userName} | <strong>Email :</strong> ${data.email}</p>`;
                 } else if (entity === "catways") {
-                    itemElement.innerHTML = `<p><strong>Catway Number :</strong> ${data.catwayNumber} | <strong>Type :</strong> ${data.catwayType} | <strong>Type :</strong> ${data.catwayType}</p>`;
+                    itemElement.innerHTML = `<p><strong>Catway Number :</strong> ${data.catwayNumber} | <strong>Type :</strong> ${data.catwayType} | <strong>Type :</strong> ${data.catwayState}</p>`;
                 } else if (entity === "reservations") {
-                    itemElement.innerHTML = `<p><strong>Client :</strong> ${data.clientName} | <strong>Bateau :</strong> ${data.boatName}</p>`;
+                    itemElement.innerHTML = `<p><strong>Client :</strong> ${data.clientName} | <strong>Bateau :</strong> ${data.boatName} | <strong>Date de début :</strong> ${data.startDate} | <strong>Date de fin :</strong> ${data.endDate}</p>`;
                 }
                 resultsContainer.appendChild(itemElement);
         } else {
@@ -59,8 +60,10 @@ document.querySelectorAll(".delete-btn").forEach(button => {
         if (entity === "users") {
             const email = row.dataset.email; // Récupérer l'email de l'utilisateur
             url = `/users/${email}`;
+
         } else if (entity === "catways") {
             url = `/catways/${catwayId}`;
+            
         } else if (entity === "reservations") {
             const reservationId = row.dataset.id; // ID de la réservation
             url = `/catways/${catwayId}/reservations/${reservationId}`;
@@ -177,12 +180,13 @@ document.querySelectorAll(".update-btn").forEach(button => {
     button.addEventListener("click", (event) => {
         const id = event.target.dataset.id; // ID de l'élément à modifier
         const row = document.getElementById(`row-${id}`); // Trouver la ligne
+        const catwayId = row.dataset.catway; // Id du catway
 
         let url = "";
         const entity = event.target.closest("[data-entity]").dataset.entity;
 
-        const updateUserForm = document.createElement("td");
-        updateUserForm.colSpan = 6; // Remplacer la ligne entière
+        const updateForm = document.createElement("td");
+        updateForm.colSpan = 6; // Remplacer la ligne entière
 
         switch (entity) {
             case "users":
@@ -191,7 +195,7 @@ document.querySelectorAll(".update-btn").forEach(button => {
                 const password = row.children[2].innerText;
                 url = `/users/${email}`;
 
-                updateUserForm.innerHTML = `
+                updateForm.innerHTML = `
                     <form id="update-form-${id}">
                         <input name="userName" value="${userName}">
                         <input name="email" value="${email}">
@@ -200,36 +204,29 @@ document.querySelectorAll(".update-btn").forEach(button => {
                         <button type="button" onclick="cancelUpdate('${id}')">Annuler</button>
                     </form>
                 `;
-                row.replaceChildren(updateUserForm);
+                row.replaceChildren(updateForm);
                 break;
             case "catways":
-                const catwayNumber = row.children[1].innerText;
-                const catwayType = row.children[2].innerText;
-                const catwayState = row.children[3].innerText;
-                url = `/catways/${id}`;
+                const catwayState = row.children[2].innerText;
+                url = `/catways/${catwayId}`;
 
-                updateCatwayForm.innerHTML = `
+                updateForm.innerHTML = `
                     <form id="update-form-${id}">
-                        <input name="catwayNumber" value="${catwayNumber}">
-                        <select name="catwayType" value="${catwayType}">
-                            <option value="long">Long</option>
-                            <option value="short">Short</option>
-                        </select>
                         <input name="catwayState" value="${catwayState}">
                         <button type="submit">Valider</button>
                         <button type="button" onclick="cancelUpdate('${id}')">Annuler</button>
                     </form>
                 `;
-                row.replaceChildren(updateCatwayForm);
+                row.replaceChildren(updateForm);
                 break;
             case "reservations":
                 const clientName = row.children[1].innerText;
                 const boatName = row.children[2].innerText;
                 const startDate = row.children[3].innerText;
                 const endDate = row.children[4].innerText;
-                url = `/catways/${id}/reservations`;
+                url = `/catways/${catwayId}/reservations`;
 
-                updateReservationForm.innerHTML = `
+                updateForm.innerHTML = `
                     <form id="update-form-${id}">
                         <input name="clientName" value="${clientName}">
                         <input name="boatName" value="${boatName}">
@@ -239,7 +236,7 @@ document.querySelectorAll(".update-btn").forEach(button => {
                         <button type="button" onclick="cancelUpdate('${id}')">Annuler</button>
                     </form>
                 `;
-                row.replaceChildren(updateReservationForm);
+                row.replaceChildren(updateForm);
                 break;
             default:
                 console.error("Entité inconnue");

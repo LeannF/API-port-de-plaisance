@@ -11,7 +11,7 @@
             <h1>Réservations</h1>
             <section>
                 <h2>Rechercher une réservation</h2>
-                <form id="search-form" action="/catways" method="get">
+                <form id="search-form" data-entity="reservations" action="/catways" method="get">
                     <label for="catwayNumber">Numéro du catway</label>
                     <input name="catwayNumber" id="catwayNumber" type="text" required>
                 
@@ -50,6 +50,7 @@
                     <caption>Réservations en cours</caption>
                     <thead>
                         <tr>
+                            <th>ID de la réservation</th>
                             <th>Numéro du Catway</th>
                             <th>Nom du client</th>
                             <th>Nom du bateau</th>
@@ -60,7 +61,8 @@
                     </thead>
                     <tbody data-entity="reservations">
                         <% reservations.forEach(reservation => { %>
-                            <tr id="row-<%= reservation._id %>" data-catway="<%= reservation.catwayNumber %>">
+                            <tr id="row-<%= reservation._id %>" data-catway="<%= reservation.catwayNumber %>" data-id="<%= reservation._id %>">
+                                <td><%= reservation._id %></td>
                                 <td><%= reservation.catwayNumber %></td>
                                 <td><%= reservation.clientName %></td>
                                 <td><%= reservation.boatName %></td>

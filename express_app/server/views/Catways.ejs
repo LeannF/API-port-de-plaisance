@@ -11,12 +11,13 @@
             <h1>Catways</h1>
             <section>
                 <h2>Rechercher un catway</h2>
-                <form action="catways/<%= catwayNumber %>" method="get">
+                <form data-entity="catways" id="search-form" action="catways/<%= catwayNumber %>" method="get">
                     <label for="catwayNumber">Numéro du catway</label>
                     <input name="catwayNumber" id="catwayNumber" type="text" required>
                     
                     <input id="reloadBtn" class="btn" type="submit" value="Rechercher"></input>
                 </form>
+                <div id="resultsContainer"></div>
             </section>
             <section>
                 <h2>Ajouter un catway</h2>
@@ -34,7 +35,7 @@
                     <label for="catwayState">Etat du catway</label>
                     <input name="catwayState" id="catwayState" required>
                     
-                    <input id="reloadBtn" class="btn" type="submit" value="submit"></input>
+                    <input class="btn" type="submit" value="submit"></input>
                 </form>
             </section>      
             <section>
