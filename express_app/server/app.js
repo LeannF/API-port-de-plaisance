@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const cors = require('cors');
 const bodyParser = require('body-parser'); 
 const session = require('express-session');
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -35,11 +34,6 @@ app.use(session({
   resave: false, 
   saveUninitialized: true, 
   cookie: { secure: false } 
-}));
-
-app.use(cors({
-  exposedHeaders: ['Authorization'],
-  origin: ''
 }));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
