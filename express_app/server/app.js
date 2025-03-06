@@ -55,11 +55,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/', indexRouter);
+app.use('/index', indexRouter);
 app.use('/users', usersRouter);
-app.use('/', reservationsRouter);
+app.use('/reservations', reservationsRouter);
 app.use('/catways', catwaysRouter);
-app.use('/', authRouter);
+app.use('/auth', authRouter);
 
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
