@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 exports.login = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: "Utilisateur non trouvé" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcryptjs.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Mot de passe incorrect" });
         }

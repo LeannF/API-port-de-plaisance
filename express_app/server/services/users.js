@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 exports.getByEmail = async(req, res) => {
     const email = req.params.email
@@ -53,8 +53,8 @@ exports.update = async (req, res) => {
 
         /** Si un mot de passe est fourni, on le hash avant de le stocker */ 
         if (req.body.password) {
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(req.body.password, salt);
+            const salt = await bcryptjs.genSalt(10);
+            user.password = await bcryptjs.hash(req.body.password, salt);
         }
         await user.save(); 
 
