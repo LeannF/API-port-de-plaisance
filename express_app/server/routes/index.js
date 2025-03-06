@@ -35,7 +35,7 @@ router.get('/users', auth.isAuthenticated, async (req, res) => {
   const users = await User.find().lean();
   const id = req.params.email;
 
-  res.render('./users', {
+  res.render('users', {
     title: 'Page des Utilisateurs',
     users: users || [],
     email: id
@@ -45,6 +45,7 @@ router.get('/users', auth.isAuthenticated, async (req, res) => {
 router.get('/catways', auth.isAuthenticated, async (req, res) => {
   const catways = await Catway.find().lean();
   const id = req.params.id;
+  console.log("Rendering catways view");
 
   res.render('catways', {
     title: 'Page des Catways',
@@ -53,7 +54,7 @@ router.get('/catways', auth.isAuthenticated, async (req, res) => {
   })
 });
 
-router.get('/reservations', auth.isAuthenticated, async (req, res) => {
+router.get('/reservations', async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const id = req.params.id;
   const _id = req.params.idReservation;
