@@ -14,6 +14,8 @@ const reservationsRouter = require('./routes/reservations');
 const catwaysRouter = require('./routes/catways');
 const authRouter = require('./routes/auth');
 
+require('dotenv').config({ path: './env/.env' });
+
 const mongodb = require('./db/mongo');
 const { models } = require('mongoose');
 
@@ -27,6 +29,7 @@ const app = express();
  * @saveUninitialized Sauvegarde une session même vide
  * @cookie autorise les cookie en http
  */
+
 app.use(session({
   secret: 'monSuperSecret', 
   resave: false, 

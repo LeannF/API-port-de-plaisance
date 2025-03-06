@@ -6,10 +6,10 @@ const clientOptions = {
 
 exports.initClientDbConnection = async () => {
     try {
-        await mongoose.connect(process.env.URL_MONGO, clientOptions)
-        console.log('connect');
-    }catch(error) {
-        console.log(error);
+        await mongoose.connect("mongodb+srv://LeyLey:J8tYT8GCegzYGJ@port-de-plaisance.hiye4.mongodb.net/?retryWrites=true&w=majority&appName=Port-de-Plaisance", clientOptions);
+        console.log('Connecté à MongoDB');
+    } catch (error) {
+        console.log('Erreur de connexion :', error);
         throw error;
     }
-}
+};
