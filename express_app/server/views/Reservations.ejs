@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/style.css">
+        <title>Réservations</title>
+    </head>
+    <body>
+        <main>
+            <h1>Réservations</h1>
+            <section>
+                <h2>Rechercher une réservation</h2>
+                <form id="search-form" data-entity="reservations" action="/catways" method="get">
+                    <label for="catwayNumber">Numéro du catway</label>
+                    <input name="catwayNumber" id="catwayNumber" type="text" required>
+                
+                    <label for="idReservation">Id de la réservation</label>
+                    <input name="idReservation" id="idReservation" type="text" required>
+                    
+                    <input id="reloadBtn" class="btn" type="submit" value="Rechercher"></input>
+                </form>
+                <div id="resultsContainer"></div>
+            </section>
+            <section>
+                <h2>Ajouter une réservation</h2>
+                <form action="/catways/<%= catwayNumber %>/reservations" method="post" >
+
+                    <label for="catwayNumber">Numéro du catway</label>
+                    <input name="catwayNumber" id="catwayNumber" type="text" required>
+                    
+                    <label for="clientName">Nom du client</label>
+                    <input name="clientName" id="clientName" required>
+
+                    <label for="boatName">Nom du bateau</label>
+                    <input name="boatName" id="boatName" required>
+
+                    <label for="startDate">Date de début</label>
+                    <input name="startDate" id="startDate" required>
+
+                    <label for="endDate">Date de fin</label>
+                    <input name="endDate" id="endDate" required>
+                    
+                    <input class="btn" type="submit" value="submit"></input>
+                </form>
+            </section>      
+            <section>
+                <h2>Liste des réservations</h2>
+                <table>
+                    <caption>Réservations en cours</caption>
+                    <thead>
+                        <tr>
+                            <th>ID de la réservation</th>
+                            <th>Numéro du Catway</th>
+                            <th>Nom du client</th>
+                            <th>Nom du bateau</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Modifications</th>
+                        </tr>
+                    </thead>
+                    <tbody data-entity="reservations">
+                        <% reservations.forEach(reservation => { %>
+                            <tr id="row-<%= reservation._id %>" data-catway="<%= reservation.catwayNumber %>" data-id="<%= reservation._id %>">
+                                <td><%= reservation._id %></td>
+                                <td><%= reservation.catwayNumber %></td>
+                                <td><%= reservation.clientName %></td>
+                                <td><%= reservation.boatName %></td>
+                                <td><%= reservation.startDate %></td>
+                                <td><%= reservation.endDate %></td>
+                                <td>
+                                    <button class="update-btn" data-id="<%= reservation._id %>">Modifier</button>
+                                    <button class="delete-btn" data-id="<%= reservation._id %>">Supprimer</button>
+                                </td>
+                            </tr>
+                        <% }) %>    
+                    </tbody> 
+                </table>
+            </section> 
+        </main>   
+    </body>
+    <script src="/javascripts/script.js"></script>
+</html>

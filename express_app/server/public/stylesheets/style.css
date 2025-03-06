@@ -1,8 +1,38 @@
 body {
-  padding: 50px;
+  display: block;
+  padding: 1em;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+section{
+  margin-bottom: 2em;
+}
+
+nav ul{
+  font-size: 1.5em;
+  margin: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+table{
+  margin: auto;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 1em;
+}
+
+input{
+  margin-right: 1em;
+  margin-top: 1em;
 }
 
 a {
-  color: #00B7FF;
+  text-decoration: none;
+  list-style: none;
+  color: blue;
 }

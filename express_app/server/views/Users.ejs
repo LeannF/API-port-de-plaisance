@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/style.css">
+        <title>Utilisateurs</title>
+    </head>
+    <body>
+        <main>
+            <h1>Uilisateurs</h1>
+            <section>
+                <h2>Rechercher un utilisateur</h2>
+                <form data-entity="users" id="search-form" name="users" action="/users/<%= email %>" method="get">
+                    <label for="email">Email de l'utilisateur</label>
+                    <input name="email" id="email" type="text" required>
+                    
+                    <input id="searchBtn" type="submit" value="Rechercher"></input>
+                </form>
+                <div id="resultsContainer"></div>
+            </section>
+            <section>
+                <h2>Ajouter un utilisateur</h2>
+                <form action="/users" method="post" >
+                    <label for="userName">Nom d'utilisateur</label>
+                    <input name="userName" id="userName" type="text" required>
+
+                    <label for="email">Email de l'utilisateur</label>
+                    <input name="email" type="text" required>
+                    
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="password" id="password" required>
+                    
+                    <input type="submit"></input>
+                </form>
+            </section>      
+            <section>
+                <h2>Liste des utilisateurs</h2>
+                <table>
+                    <caption>Utilisateurs</caption>
+                    <thead>
+                        <tr>
+                            <th>Nom de l'utilisateur</th>
+                            <th>Email</th>
+                            <th>Mot de passe</th>
+                            <th>Modifications</th>
+                        </tr>
+                    </thead>
+                    <tbody data-entity="users">
+                        <% users.forEach(user => { %>
+                            <tr id="row-<%= user._id %>">
+                                <td><%= user.userName %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.password %></td>
+                                <td>
+                                    <button class="update-btn" data-id="<%= user._id %>">Modifier</button>
+                                    <button class="delete-btn" data-id="<%= user._id %>">Supprimer</button>
+                                </td>
+                            </tr>
+                        <% }) %>    
+                    </tbody> 
+                </table>
+            </section> 
+        </main>   
+    </body>
+    <script src="/javascripts/script.js"></script>
+</html>

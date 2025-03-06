@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/style.css">
+        <title>Catways</title>
+    </head>
+    <body>
+        <main>
+            <h1>Catways</h1>
+            <section>
+                <h2>Rechercher un catway</h2>
+                <form data-entity="catways" id="search-form" action="catways/<%= catwayNumber %>" method="get">
+                    <label for="catwayNumber">Numéro du catway</label>
+                    <input name="catwayNumber" id="catwayNumber" type="text" required>
+                    
+                    <input id="reloadBtn" class="btn" type="submit" value="Rechercher"></input>
+                </form>
+                <div id="resultsContainer"></div>
+            </section>
+            <section>
+                <h2>Ajouter un catway</h2>
+                <form action="/catways" method="post" >
+
+                    <label for="catwayNumber">Numéro du catway</label>
+                    <input name="catwayNumber" id="catwayNumber" type="text" required>
+                    
+                    <label for="catwayType">Type du catway</label>
+                    <select name="catwayType" id="catwayType" required>
+                        <option value="long">long</option>
+                        <option value="short">short</option>
+                    </select>
+
+                    <label for="catwayState">Etat du catway</label>
+                    <input name="catwayState" id="catwayState" required>
+                    
+                    <input class="btn" type="submit" value="submit"></input>
+                </form>
+            </section>      
+            <section>
+                <h2>Liste des catways</h2>
+                <table>
+                    <caption>Catways</caption>
+                    <thead>
+                        <tr>
+                            <th>Numéro du Catway</th>
+                            <th>Type du catway</th>
+                            <th>Etat du catway</th>
+                            <th>Modifications</th>
+                        </tr>
+                    </thead>
+                    <tbody data-entity="catways">
+                        <% catways.forEach(catway => { %>
+                            <tr id="row-<%= catway._id %>" data-catway="<%= catway.catwayNumber %>">
+                                <td><%= catway.catwayNumber %></td>
+                                <td><%= catway.catwayType %></td>
+                                <td><%= catway.catwayState %></td>
+                                <td>
+                                    <button class="update-btn" data-id="<%= catway._id %>">Modifier</button>
+                                    <button class="delete-btn" data-id="<%= catway._id %>">Supprimer</button>
+                                </td>
+                            </tr>
+                        <% }) %>    
+                    </tbody> 
+                </table>
+            </section> 
+        </main>   
+    </body>
+    <script src="/javascripts/script.js"></script>
+</html>

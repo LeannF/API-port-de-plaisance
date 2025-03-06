@@ -3,6 +3,23 @@ const Schema = mongoose.Schema;
 
 const bcrypt= require('bcrypt');
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         userName:
+ *           type: string
+ *           example: "John Doe"
+ *         email:
+ *           type: string
+ *           example: "johndoe@gmail.com"
+ *         password:
+ *           type: string
+ *           example: john&Do3
+ */
 const User = new Schema(    {
     userName: {
         type: String,
@@ -33,7 +50,7 @@ const User = new Schema(    {
     }
 })
 
-//hash le mdp
+/** hash le mdp*/
 User.pre('save', function(next) {
     if (!this.isModified('password')) {
         return next();

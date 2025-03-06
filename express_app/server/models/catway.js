@@ -1,6 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Catway:
+ *       type: object
+ *       properties:
+ *         catwayNumber:
+ *           type: integer
+ *           example: "1"
+ *         catwayType:
+ *           type: string
+ *           example: "short"
+ *         catwayState:
+ *           type: string
+ *           example: "bon état"
+ */
 const Catway = new Schema( {
     catwayNumber: {
         type: Number,

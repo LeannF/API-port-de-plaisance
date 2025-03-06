@@ -1,10 +1,11 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
-exports.getByEmail = async(req, res, next) => {
+exports.getByEmail = async(req, res) => {
     const email = req.params.email
 
     try{
-        let user = await User.findByEmail(email);
+        let user = await User.findOne({email});
         if (user) {
             return res.status(200).json(user);
         }
@@ -13,71 +14,61 @@ exports.getByEmail = async(req, res, next) => {
         return res.status(501).json("Invalid user ID format");
     }
 }
-exports.getAllUsers = (req, res, next) => {
-    User.find()  
-    .then(user => {
-        res.status(200).json(user);
-    })
-    .catch(error => {
-        res.status(400).json({ error });
-    });
+
+exports.getAllUsers = async() => {
+    try {
+        return await User.find().lean();
+    } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
+        return [];
+    }
 }
 
-
-exports.add = async(req, res, next) => {
-    const temp = ({
-        userName    : req.body.userName, 
-        email       : req.body.email,
-        password    : req.body.password,  
-    });
-
+exports.add = async(req, res) => {
     try{
-        let user = await User.create(temp);
+        const { userName, email, password } = req.body;
 
-        return res.status(201).json(user);
+        const newUser = ({
+            userName    : req.body.userName, 
+            email       : req.body.email,
+            password    : req.body.password,  
+        });
+        await User.create(newUser);
     } catch(error){
         return res.status(501).json(error);
     }
 }
 
-exports.update = async(req, res, next) => {
-    const email = req.params.email
-    
-    const temp = ({
-        userName    : req.body.userName, 
-        email       : req.body.email,
-        password    : req.body.password,  
-    });
+exports.update = async (req, res) => {
+    const email = req.params.email;
+    try {
+        let user = await User.findOne({ email });
 
-    try{
-        let user = await User.findOne({_email : email});
-
-        if (user) {
-            Object.keys(temp).forEach((key) =>{
-                if (!!temp[key]) {
-                    user[key] = temp[key];
-                }
-            });
-            await User.save();
-            return res.status(201).json(user);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
+        /** Mise à jour des champs uniquement si une nouvelle valeur est fournie */ 
+        if (req.body.userName) user.userName = req.body.userName;
+        if (req.body.email) user.email = req.body.email;
 
-        return res.status(404).json('user_not_found');
-    } catch(error){
-        return res.status(501).json(error);
+        /** Si un mot de passe est fourni, on le hash avant de le stocker */ 
+        if (req.body.password) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(req.body.password, salt);
+        }
+        await user.save(); 
+
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error: error.message });
     }
 }
 
-exports.delete = async(req, res, next) => {
-    const email = req.params.email
-
+exports.delete = async(req, res) => {
     try{
-        await User.deleteOne({_email : email});
-
+        await User.deleteOne({email: req.params.email});
         return res.status(204).json('delete_ok');
     } catch(error){
         return res.status(501).json(error);
     }
 }
-
-//vérifier les différentes données fournies avant l’enregistrement en base de données
