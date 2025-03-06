@@ -20,6 +20,7 @@ const { models } = require('mongoose');
 mongodb.initClientDbConnection();
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 /**
  * @secret Clé secrète pour signer les sessions
@@ -86,6 +87,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(function(req, res, next) {
   res.status(404).json({ name: 'PDP', version: '1.0', status: 404, message: 'not_found' });
+});
+
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 module.exports = app;

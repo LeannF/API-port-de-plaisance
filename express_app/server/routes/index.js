@@ -6,8 +6,6 @@ const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 const User = require('../models/user');
 
-const userRoute = require('./users');
-
 /**
  * @lean returns a javascript object
  * @get récupère les pages nécessaires pour le site
@@ -73,7 +71,5 @@ router.get('/doc', auth.isAuthenticated, async (req, res) => {
     title: 'Documentation API'
   })
 });
-
-router.use('/users', userRoute);
 
 module.exports = router;
