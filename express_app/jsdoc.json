@@ -1,0 +1,11 @@
+{
+    "source": {
+        "include": ["server"],
+        "includePattern": "\\.js$",
+        "excludePatter": "(node_modules/|docs|\\.ejs)"
+    },
+    "opts": {
+        "recurse": true,
+        "destination": "docs/"
+    }
+}

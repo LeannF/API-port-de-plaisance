@@ -1,24 +1,29 @@
 var express = require('express');
 var router = express.Router();
 
-const private = require('../middlewares/private');
+const auth = require('../middlewares/auth');
 const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 const User = require('../models/user');
 
 const userRoute = require('./users');
 
+/**
+ * @lean returns a javascript object
+ * @get récupère les pages nécessaires pour le site
+ * @render rend la vue correspondante
+ * @isAuthenticated vérifie si l'utilateur est connecté 
+ */
 
-/* GET home page. */
 router.get('/', async (req, res) => {
   res.render('accueil', {
     title: 'Page de connexion'
   })
 });
 
-router.get('/board', private.isAuthenticated,   async (req, res) => {
+router.get('/board', auth.isAuthenticated,   async (req, res) => {
   const reservations = await Reservation.find().lean(); 
-  const today = new Date(); // Date du jour
+  const today = new Date();
 
   res.render('board', {
     user: req.session.user,
@@ -28,7 +33,7 @@ router.get('/board', private.isAuthenticated,   async (req, res) => {
   })
 });
 
-router.get('/users', async (req, res) => {
+router.get('/users', auth.isAuthenticated, async (req, res) => {
   const users = await User.find().lean();
   const id = req.params.email;
 
@@ -39,7 +44,7 @@ router.get('/users', async (req, res) => {
   })
 });
 
-router.get('/catways', async (req, res) => {
+router.get('/catways', auth.isAuthenticated, async (req, res) => {
   const catways = await Catway.find().lean();
   const id = req.params.id;
 
@@ -50,7 +55,7 @@ router.get('/catways', async (req, res) => {
   })
 });
 
-router.get('/reservations', async (req, res) => {
+router.get('/reservations', auth.isAuthenticated, async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const id = req.params.id;
   const _id = req.params.idReservation;
@@ -63,7 +68,7 @@ router.get('/reservations', async (req, res) => {
   })
 });
 
-router.get('/doc', private.isAuthenticated, async (req, res) => {
+router.get('/doc', auth.isAuthenticated, async (req, res) => {
   res.render('doc', {
     title: 'Documentation API'
   })

@@ -4,7 +4,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser'); 
-const cookieSession = require('express-session');
+const session = require('express-session');
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -13,17 +15,23 @@ const catwaysRouter = require('./routes/catways');
 const authRouter = require('./routes/auth');
 
 const mongodb = require('./db/mongo');
+const { models } = require('mongoose');
 
 mongodb.initClientDbConnection();
 
 const app = express();
 
-
-app.use(cookieSession({
-  secret: 'monSuperSecret', // Clé secrète pour signer les sessions
-  resave: false, // Ne pas sauvegarder si aucune modification
-  saveUninitialized: true, // Sauvegarde une session même vide
-  cookie: { secure: false } // 1h d'expiration
+/**
+ * @secret Clé secrète pour signer les sessions
+ * @resave Ne sauvegarde pas si aucune modification
+ * @saveUninitialized Sauvegarde une session même vide
+ * @cookie autorise les cookie en http
+ */
+app.use(session({
+  secret: 'monSuperSecret', 
+  resave: false, 
+  saveUninitialized: true, 
+  cookie: { secure: false } 
 }));
 
 app.use(cors({
@@ -31,11 +39,12 @@ app.use(cors({
   origin: ''
 }));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 
-// Utiliser body-parser pour parser les données du formulaire
+/** Utiliser body-parser pour parser les données du formulaire */ 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// view engine setup
+/** view engine setup */ 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -53,6 +62,26 @@ app.use('/', authRouter);
 
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+/** Définition des options Swagger */ 
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API Port de Plaisance",
+      version: "1.0.0",
+      description: "Documentation de l'API avec Swagger",
+    },
+  },
+  /** // Chemin vers les fichiers de route */
+  apis: [
+    "./server/routes/*.js",
+    "./server/models/*.js"
+  ],
+};
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 
 app.use(function(req, res, next) {

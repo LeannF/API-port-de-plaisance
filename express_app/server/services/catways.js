@@ -1,6 +1,6 @@
 const Catway = require('../models/catway');
 
-exports.getById = async(req, res, next) => {
+exports.getById = async(req, res) => {
     try{
         let catway = await Catway.findOne({ catwayNumber: req.params.id });
         if (catway) {
@@ -12,19 +12,20 @@ exports.getById = async(req, res, next) => {
     }
 }
 
-exports.getAllCatways = async(req, res, next) => {
+exports.getAllCatways = async() => {
     try {
-        return await Catway.find().lean();  // Retourne directement les catways
+        /**  Retourne directement les catways */
+        return await Catway.find().lean(); 
     } catch (error) {
         console.error("Erreur lors de la récupération des catways :", error);
-        return []; // Retourne un tableau vide en cas d'erreur
+        /** Retourne un tableau vide en cas d'erreur */
+        return []; 
     }
 }
 
 exports.add = async(req, res, next) => {
     try{
         const { catwayNumber, catwayType, catwayState } = req.body;
-
         const newCatway = ({
             catwayNumber    : req.body.catwayNumber, 
             catwayType      : req.body.catwayType,
@@ -33,13 +34,12 @@ exports.add = async(req, res, next) => {
 
         await Catway.create(newCatway);
 
-        //return res.status(201).json(catway);
     } catch(error){
         return res.status(501).json(error);
     }
 }
 
-exports.update = async(req, res, next) => {    
+exports.update = async(req, res) => {    
     const temp = ({
         catwayNumber    : req.params.id,
         catwayState     : req.body.catwayState,  
@@ -48,7 +48,6 @@ exports.update = async(req, res, next) => {
 
     try{
         let catway = await Catway.findOne({ catwayNumber: req.params.id });
-
         if (catway) {
             Object.keys(temp).forEach((key) =>{
                 if (!!temp[key]) {
@@ -58,15 +57,13 @@ exports.update = async(req, res, next) => {
             await catway.save();
             return res.status(201).json(catway);
         }
-
         return res.status(404).json('catway_not_found');
     } catch(error){
         return res.status(501).json(error);
     }
 }
 
-exports.delete = async(req, res, next) => {
-
+exports.delete = async(req, res) => {
     try{
         await Catway.deleteOne({ catwayNumber: req.params.id });
 
@@ -75,5 +72,3 @@ exports.delete = async(req, res, next) => {
         return res.status(501).json(error);
     }
 }
-
-//vérifier les différentes données fournies avant l’enregistrement en base de données

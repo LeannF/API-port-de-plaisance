@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: public/javascripts/script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: public/javascripts/script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @preventDefault Empêche le rechargement de la page
+ * @catwayID recupere le numero du catway
+ * @entity récupere l'entité indiqué sur la page (users, catways ou reservations)
+ * @reservationId recupere le l'id de la réservation
+ * @id id de l'element a modifier
+ * @email récupére l'email de l'utilisateur
+ * @remove retire la ligne du DOM
+ * @replaceChildren remplace la ligne par le formulaire de modification rempli
+ * @reload  Recharge la page après succès
+ */
+
+document.getElementById("search-form").addEventListener("submit", async (event) => {
+    event.preventDefault(); 
+
+    const entity = event.target.closest("[data-entity]").dataset.entity;
+    const catwayId = document.getElementById("catwayNumber").value;
+
+    let url = "";
+
+    if (entity === "users") {
+        const email = document.getElementById("email").value;
+        url = `/users/${email}`;
+
+    } else if (entity === "catways") {
+        url = `/catways/${catwayId}`;
+
+    } else if (entity === "reservations") {
+        const reservationId = document.getElementById("idReservation").value;
+        url = `/catways/${catwayId}/reservations/${reservationId}`;
+    }
+
+    try {
+        const response = await fetch(url, { method: "GET" });
+        const data = await response.json();
+
+        if (response.ok) {
+            /** Génére l'affichage des résultats */ 
+            const resultsContainer = document.getElementById("resultsContainer");
+            if (!resultsContainer) {
+                console.error("Container des résultats introuvable !");
+            }
+            /** Réinitialise les résultats précédents */
+            resultsContainer.innerHTML = ""; 
+                const itemElement = document.createElement("div");
+                if (entity === "users") {
+                    itemElement.innerHTML = `&lt;p>&lt;strong>Nom :&lt;/strong> ${data.userName} | &lt;strong>Email :&lt;/strong> ${data.email}&lt;/p>`;
+                } else if (entity === "catways") {
+                    itemElement.innerHTML = `&lt;p>&lt;strong>Catway Number :&lt;/strong> ${data.catwayNumber} | &lt;strong>Type :&lt;/strong> ${data.catwayType} | &lt;strong>Type :&lt;/strong> ${data.catwayState}&lt;/p>`;
+                } else if (entity === "reservations") {
+                    itemElement.innerHTML = `&lt;p>&lt;strong>Client :&lt;/strong> ${data.clientName} | &lt;strong>Bateau :&lt;/strong> ${data.boatName} | &lt;strong>Date de début :&lt;/strong> ${data.startDate} | &lt;strong>Date de fin :&lt;/strong> ${data.endDate}&lt;/p>`;
+                }
+                resultsContainer.appendChild(itemElement);
+        } else {
+            document.getElementById("resultsContainer").innerHTML = "&lt;p>Aucun résultat trouvé&lt;/p>";
+        }
+    } catch (error) {
+        console.error("Erreur :", error);
+        document.getElementById("resultsContainer").innerHTML = "&lt;p>Une erreur est survenue.&lt;/p>";
+    }
+});
+
+
+document.querySelectorAll(".delete-btn").forEach(button => {
+    button.addEventListener("click", async (event) => {
+        /** Trouve la ligne du bouton */
+        const row = event.target.closest("tr"); 
+        const catwayId = row.dataset.catway; 
+        const entity = row.closest("[data-entity]").dataset.entity; 
+        let url = "";
+
+        /** Popup qui demande de confirmer la suppression */
+        if (!confirm("Voulez-vous vraiment supprimer cet élément ?")) return; 
+
+        if (entity === "users") {
+            const email = row.dataset.email; 
+            url = `/users/${email}`;
+
+        } else if (entity === "catways") {
+            url = `/catways/${catwayId}`;
+            
+        } else if (entity === "reservations") {
+            const reservationId = row.dataset.id; 
+            url = `/catways/${catwayId}/reservations/${reservationId}`;
+        }
+
+        try {
+            const response = await fetch(url, { method: "DELETE" });
+
+            if (response.ok) {
+                row.remove(); 
+            } else {
+                console.error("Erreur lors de la suppression");
+            }
+        } catch (error) {
+            console.error("Erreur serveur lors de la suppression", error);
+        }
+    });
+});
+
+document.querySelectorAll(".update-btn").forEach(button => {
+    button.addEventListener("click", (event) => {
+        const id = event.target.dataset.id; 
+        const row = document.getElementById(`row-${id}`); 
+        const catwayId = row.dataset.catway; 
+
+        let url = "";
+        const entity = event.target.closest("[data-entity]").dataset.entity;
+
+        const updateForm = document.createElement("td");
+        updateForm.colSpan = 6; 
+
+        /** formulaire modifiant les données par rapport à la page sur laquelle se trouve l'utilisateur */
+        switch (entity) {
+            case "users":
+                const userName = row.children[0].innerText;
+                const email = row.children[1].innerText;
+                const password = row.children[2].innerText;
+                url = `/users/${email}`;
+
+                updateForm.innerHTML = `
+                    &lt;form id="update-form-${id}">
+                        &lt;input name="userName" value="${userName}">
+                        &lt;input name="email" value="${email}">
+                        &lt;input name="password" value="${password}">
+                        &lt;button type="submit">Valider&lt;/button>
+                        &lt;button type="button" onclick="cancelUpdate('${id}')">Annuler&lt;/button>
+                    &lt;/form>
+                `;
+                row.replaceChildren(updateForm);
+                break;
+            case "catways":
+                const catwayState = row.children[2].innerText;
+                url = `/catways/${catwayId}`;
+
+                updateForm.innerHTML = `
+                    &lt;form id="update-form-${id}">
+                        &lt;input name="catwayState" value="${catwayState}">
+                        &lt;button type="submit">Valider&lt;/button>
+                        &lt;button type="button" onclick="cancelUpdate('${id}')">Annuler&lt;/button>
+                    &lt;/form>
+                `;
+                row.replaceChildren(updateForm);
+                break;
+            case "reservations":
+                const clientName = row.children[1].innerText;
+                const boatName = row.children[2].innerText;
+                const startDate = row.children[3].innerText;
+                const endDate = row.children[4].innerText;
+                url = `/catways/${catwayId}/reservations`;
+
+                updateForm.innerHTML = `
+                    &lt;form id="update-form-${id}">
+                        &lt;input name="clientName" value="${clientName}">
+                        &lt;input name="boatName" value="${boatName}">
+                        &lt;input name="startDate" type="date" value="${startDate}">
+                        &lt;input name="endDate" type="date" value="${endDate}">
+                        &lt;button type="submit">Valider&lt;/button>
+                        &lt;button type="button" onclick="cancelUpdate('${id}')">Annuler&lt;/button>
+                    &lt;/form>
+                `;
+                row.replaceChildren(updateForm);
+                break;
+            default:
+                console.error("Entité inconnue");
+                return;
+        }
+
+        /** Écouteur de soumission du formulaire */ 
+        document.getElementById(`update-form-${id}`).addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(url, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error("Erreur lors de la mise à jour");
+                }
+            } catch (error) {
+                console.error("Erreur serveur lors de la mise à jour", error);
+            }
+        });
+    });
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#isAuthenticated">isAuthenticated</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Mar 05 2025 21:50:07 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

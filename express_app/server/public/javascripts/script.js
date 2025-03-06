@@ -1,9 +1,18 @@
+/**
+ * @preventDefault Empêche le rechargement de la page
+ * @catwayID recupere le numero du catway
+ * @entity récupere l'entité indiqué sur la page (users, catways ou reservations)
+ * @reservationId recupere le l'id de la réservation
+ * @id id de l'element a modifier
+ * @email récupére l'email de l'utilisateur
+ * @remove retire la ligne du DOM
+ * @replaceChildren remplace la ligne par le formulaire de modification rempli
+ * @reload  Recharge la page après succès
+ */
+
 document.getElementById("search-form").addEventListener("submit", async (event) => {
-    event.preventDefault(); // Empêche le rechargement de la page
-
+    event.preventDefault(); 
     const entity = event.target.closest("[data-entity]").dataset.entity;
-    const catwayId = document.getElementById("catwayNumber").value; // Id du catway
-
     let url = "";
 
     if (entity === "users") {
@@ -11,24 +20,26 @@ document.getElementById("search-form").addEventListener("submit", async (event) 
         url = `/users/${email}`;
 
     } else if (entity === "catways") {
+        const catwayId = document.getElementById("catwayNumber").value;
         url = `/catways/${catwayId}`;
 
     } else if (entity === "reservations") {
+        const catwayId = document.getElementById("catwayNumber").value;
         const reservationId = document.getElementById("idReservation").value;
         url = `/catways/${catwayId}/reservations/${reservationId}`;
     }
-
     try {
         const response = await fetch(url, { method: "GET" });
         const data = await response.json();
 
         if (response.ok) {
-            // Générer l'affichage des résultats
+            /** Génére l'affichage des résultats */ 
             const resultsContainer = document.getElementById("resultsContainer");
             if (!resultsContainer) {
                 console.error("Container des résultats introuvable !");
             }
-            resultsContainer.innerHTML = ""; // Réinitialiser les résultats précédents
+            /** Réinitialise les résultats précédents */
+            resultsContainer.innerHTML = ""; 
                 const itemElement = document.createElement("div");
                 if (entity === "users") {
                     itemElement.innerHTML = `<p><strong>Nom :</strong> ${data.userName} | <strong>Email :</strong> ${data.email}</p>`;
@@ -50,22 +61,24 @@ document.getElementById("search-form").addEventListener("submit", async (event) 
 
 document.querySelectorAll(".delete-btn").forEach(button => {
     button.addEventListener("click", async (event) => {
-        const row = event.target.closest("tr"); // Trouver la ligne du bouton
-        const catwayId = row.dataset.catway; // Id du catway
-        const entity = row.closest("[data-entity]").dataset.entity; // Type d'entité (user, catway, reservation)
+        /** Trouve la ligne du bouton */
+        const row = event.target.closest("tr"); 
+        const catwayId = row.dataset.catway; 
+        const entity = row.closest("[data-entity]").dataset.entity; 
         let url = "";
 
-        if (!confirm("Voulez-vous vraiment supprimer cet élément ?")) return; // Confirmer la suppression
+        /** Popup qui demande de confirmer la suppression */
+        if (!confirm("Voulez-vous vraiment supprimer cet élément ?")) return; 
 
         if (entity === "users") {
-            const email = row.dataset.email; // Récupérer l'email de l'utilisateur
+            const email = row.dataset.email; 
             url = `/users/${email}`;
 
         } else if (entity === "catways") {
             url = `/catways/${catwayId}`;
             
         } else if (entity === "reservations") {
-            const reservationId = row.dataset.id; // ID de la réservation
+            const reservationId = row.dataset.id; 
             url = `/catways/${catwayId}/reservations/${reservationId}`;
         }
 
@@ -73,7 +86,7 @@ document.querySelectorAll(".delete-btn").forEach(button => {
             const response = await fetch(url, { method: "DELETE" });
 
             if (response.ok) {
-                row.remove(); // Supprimer la ligne du DOM
+                row.remove(); 
             } else {
                 console.error("Erreur lors de la suppression");
             }
@@ -83,111 +96,19 @@ document.querySelectorAll(".delete-btn").forEach(button => {
     });
 });
 
-
-/*document.querySelectorAll(".update-btn").forEach(button => {
-    button.addEventListener("click", async (event) => {
-        const id = event.target.dataset.id;
-        const entity = event.target.closest("[data-entity]").dataset.entity;
-        let url = "";
-
-        if (entity === "users") {
-            const email = event.target.dataset.email;
-            url = `/users/${email}`;
-        } else if (entity === "catways") {
-            url = `/catways/${id}`;
-        } else if (entity === "reservations") {
-            const catwayId = event.target.closest("tr").dataset.catway;
-            url = `/catways/${catwayId}/reservations`;
-        }
-
-        const data = { name: "Nouveau Nom" }; // Exemple de données à mettre à jour
-
-        try {
-            const response = await fetch(url, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                location.reload();
-            }
-        } catch (error) {
-            console.error(`Erreur mise à jour de ${entity} :`, error);
-        }
-    });
-});*/
-
-
-/*document.querySelectorAll(".update-btn").forEach(button => {
-    button.addEventListener("click", (event) => {
-        const id = event.target.dataset.id; // ID de l'élément à modifier
-        const updateRoute = event.target.dataset.route; // Récupération de la route
-
-        console.log("Route d'update :", updateRoute);
-        console.log("ID :", id);
-
-        const row = document.getElementById(`row-${id}`);
-
-        // Récupérer les données actuelles
-        const clientName = row.children[1].innerText;
-        const boatName = row.children[2].innerText;
-        const startDate = row.children[3].innerText;
-        const endDate = row.children[4].innerText;
-
-        // Création du formulaire de mise à jour
-        const updateForm = document.createElement("td");
-        updateForm.colSpan = 6;
-        updateForm.innerHTML = `
-            <form id="update-form-${id}">
-                <input name="clientName" value="${clientName}">
-                <input name="boatName" value="${boatName}">
-                <input name="startDate" type="date" value="${startDate}">
-                <input name="endDate" type="date" value="${endDate}">
-                <button type="submit">Valider</button>
-                <button type="button" onclick="cancelUpdate('${id}')">Annuler</button>
-            </form>
-        `;
-
-        // Remplacer la ligne actuelle par le formulaire
-        row.replaceChildren(updateForm);
-
-        // Écouteur d'événement pour soumission du formulaire
-        document.getElementById(`update-form-${id}`).addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch(url, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
-    
-                if (response.ok) {
-                    location.reload();
-                }
-            } catch (error) {
-                console.error(`Erreur mise à jour de ${entity} :`, error);
-            }
-        });
-    });
-});*/
-
 document.querySelectorAll(".update-btn").forEach(button => {
     button.addEventListener("click", (event) => {
-        const id = event.target.dataset.id; // ID de l'élément à modifier
-        const row = document.getElementById(`row-${id}`); // Trouver la ligne
-        const catwayId = row.dataset.catway; // Id du catway
+        const id = event.target.dataset.id; 
+        const row = document.getElementById(`row-${id}`); 
+        const catwayId = row.dataset.catway; 
 
         let url = "";
         const entity = event.target.closest("[data-entity]").dataset.entity;
 
         const updateForm = document.createElement("td");
-        updateForm.colSpan = 6; // Remplacer la ligne entière
+        updateForm.colSpan = 6; 
 
+        /** formulaire modifiant les données par rapport à la page sur laquelle se trouve l'utilisateur */
         switch (entity) {
             case "users":
                 const userName = row.children[0].innerText;
@@ -243,7 +164,7 @@ document.querySelectorAll(".update-btn").forEach(button => {
                 return;
         }
 
-        // Écouteur de soumission du formulaire
+        /** Écouteur de soumission du formulaire */ 
         document.getElementById(`update-form-${id}`).addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -257,7 +178,7 @@ document.querySelectorAll(".update-btn").forEach(button => {
                 });
 
                 if (response.ok) {
-                    location.reload(); // Recharger la page après succès
+                    location.reload();
                 } else {
                     console.error("Erreur lors de la mise à jour");
                 }
@@ -267,4 +188,3 @@ document.querySelectorAll(".update-btn").forEach(button => {
         });
     });
 });
-
