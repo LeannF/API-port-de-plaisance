@@ -4,9 +4,9 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "env-cmd -f server/env/.env nodemon --inspect server/bin/www",
-    "dev": "env-cmd -f server/env/.env.dev nodemon server/bin/www",
-    "prod": "env-cmd -f server/env/.env.prod nodemon server/bin/www",
+    "start": "nodemon --inspect server/bin/www",
+    "dev": "nodemon server/bin/www",
+    "prod": "nodemon server/bin/www",
     "doc": "jsdoc -c jsdoc.json"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "constantinople": "^4.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "env-cmd": "^10.1.0",
     "express": "^4.21.2",
