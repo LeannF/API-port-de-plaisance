@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "env-cmd -f server/env/.env nodemon --inspect server/bin/www",
+    "start": "node app.js",
     "dev": "env-cmd -f server/env/.env.dev nodemon server/bin/www",
     "prod": "env-cmd -f server/env/.env.prod nodemon server/bin/www",
     "doc": "jsdoc -c jsdoc.json"

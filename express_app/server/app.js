@@ -55,7 +55,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/index', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reservations', reservationsRouter);
 app.use('/catways', catwaysRouter);
