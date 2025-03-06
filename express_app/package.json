@@ -32,6 +32,7 @@
     "uglify-js": "^3.19.3"
   },
   "devDependencies": {
-    "jsdoc": "^4.0.4"
+    "jsdoc": "^4.0.4",
+    "nodemon": "^3.1.9"
   }
 }
