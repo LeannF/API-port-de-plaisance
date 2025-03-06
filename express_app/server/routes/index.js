@@ -23,7 +23,7 @@ router.get('/board', auth.isAuthenticated,   async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const today = new Date();
 
-  res.render('./board', {
+  res.render('board', {
     user: req.session.user,
     title: 'Tableau de bord',
     reservations: reservations || [],
@@ -35,7 +35,7 @@ router.get('/users', auth.isAuthenticated, async (req, res) => {
   const users = await User.find().lean();
   const id = req.params.email;
 
-  res.render('users', {
+  res.render('./users', {
     title: 'Page des Utilisateurs',
     users: users || [],
     email: id
