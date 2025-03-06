@@ -23,7 +23,7 @@ router.get('/board', auth.isAuthenticated,   async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const today = new Date();
 
-  res.render('board', {
+  res.render('./board', {
     user: req.session.user,
     title: 'Tableau de bord',
     reservations: reservations || [],
