@@ -6,7 +6,7 @@ const clientOptions = {
 
 exports.initClientDbConnection = async () => {
     try {
-        await mongoose.connect("mongodb+srv://LeyLey:J8tYT8GCegzYGJ@port-de-plaisance.hiye4.mongodb.net/?retryWrites=true&w=majority&appName=Port-de-Plaisance", clientOptions);
+        await mongoose.connect(process.env.URL_MONGO, clientOptions);
         console.log('Connecté à MongoDB');
     } catch (error) {
         console.log('Erreur de connexion :', error);
