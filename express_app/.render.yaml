@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: api-port-de-plaisance
+    env: node
+    buildCommand: npm install
+    startCommand: npm start

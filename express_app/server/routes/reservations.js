@@ -112,7 +112,7 @@ router.get('/catways/:id/reservations', service.getAllReservationsBycatwayNumber
  *                  example: "Black Pearl"
  *               startDate:
  *                  type: string
- *                  example: "2024-05-18T06:00:00Z	"
+ *                  example: "2024-05-18T06:00:00Z"
  *               endDate:
  *                  type: string
  *                  example: "2024-11-30T06:00:00Z"
