@@ -6,6 +6,7 @@ const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 const User = require('../models/user');
 const fs = require("fs");
+const path = require('path');
 
 /**
  * @lean returns a javascript object
