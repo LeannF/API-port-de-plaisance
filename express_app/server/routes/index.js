@@ -5,6 +5,7 @@ const auth = require('../middlewares/auth');
 const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 const User = require('../models/user');
+const fs = require("fs");
 
 /**
  * @lean returns a javascript object
@@ -17,6 +18,16 @@ router.get('/', async (req, res) => {
   res.render('accueil', {
     title: 'Page de connexion'
   })
+});
+
+router.get("/debug-files", (req, res) => {
+  const viewsPath = path.join(__dirname, "../views"); // Ajuste le chemin si besoin
+  fs.readdir(viewsPath, (err, files) => {
+    if (err) {
+      return res.status(500).send("Erreur de lecture du dossier views: " + err);
+    }
+    res.send("Fichiers dans views: " + files.join(", "));
+  });
 });
 
 router.get('/board', auth.isAuthenticated,   async (req, res) => {
@@ -54,7 +65,7 @@ router.get('/catways', auth.isAuthenticated, async (req, res) => {
   })
 });
 
-router.get('/reservations', async (req, res) => {
+router.get('/reservations', auth.isAuthenticated, async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const id = req.params.id;
   const _id = req.params.idReservation;
