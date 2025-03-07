@@ -47,26 +47,26 @@ router.get('/users', auth.isAuthenticated, async (req, res) => {
   const users = await User.find().lean();
   const id = req.params.email;
 
-  res.render('users', {
+  res.render('Users', {
     title: 'Page des Utilisateurs',
     users: users || [],
     email: id
   })
 });
 
-router.get('/catways', auth.isAuthenticated, async (req, res) => {
+router.get('/Catways', auth.isAuthenticated, async (req, res) => {
   const catways = await Catway.find().lean();
   const id = req.params.id;
   console.log("Rendering catways view");
 
-  res.render('catways', {
+  res.render('Catways', {
     title: 'Page des Catways',
     catways: catways || [],
     catwayNumber: id,
   })
 });
 
-router.get('/reservations', auth.isAuthenticated, async (req, res) => {
+router.get('/Reservations', auth.isAuthenticated, async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const id = req.params.id;
   const _id = req.params.idReservation;
