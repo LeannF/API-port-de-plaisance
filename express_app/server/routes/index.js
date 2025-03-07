@@ -54,7 +54,7 @@ router.get('/users', auth.isAuthenticated, async (req, res) => {
   })
 });
 
-router.get('/Catways', auth.isAuthenticated, async (req, res) => {
+router.get('/catways', auth.isAuthenticated, async (req, res) => {
   const catways = await Catway.find().lean();
   const id = req.params.id;
   console.log("Rendering catways view");
@@ -66,12 +66,12 @@ router.get('/Catways', auth.isAuthenticated, async (req, res) => {
   })
 });
 
-router.get('/Reservations', auth.isAuthenticated, async (req, res) => {
+router.get('/reservations', auth.isAuthenticated, async (req, res) => {
   const reservations = await Reservation.find().lean(); 
   const id = req.params.id;
   const _id = req.params.idReservation;
 
-  res.render('reservations', {
+  res.render('Reservations', {
     title: 'Page des réservations',
     reservations: reservations || [],
     catwayNumber: id,
